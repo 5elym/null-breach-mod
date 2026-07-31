@@ -1,7 +1,9 @@
 package com.notelyis.nullstep;
 
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -23,6 +25,9 @@ public class NullStep implements ModInitializer {
 	public static final Item NULL_STEP_DEVICE = new NullStepDeviceItem(
 			new Item.Properties().setId(NSD_KEY).stacksTo(1).fireResistant());
 
+	public static final DataComponentType<BlockPos> NSD_POS = DataComponentType.<BlockPos>builder()
+			.persistent(BlockPos.CODEC).build();
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -32,6 +37,7 @@ public class NullStep implements ModInitializer {
 		LOGGER.info("Initialising Null Step");
 
 		Registry.register(BuiltInRegistries.ITEM, id("null_step_device"), NULL_STEP_DEVICE);
+		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("null_step_device_pos"), NSD_POS);
 
 		LOGGER.info("Manufactured Null Step Device");
 
