@@ -20,7 +20,7 @@ public class NullStep implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static final ResourceKey<Item> NSD_KEY = ResourceKey.create(Registries.ITEM, id("null_step_device"));
-	public static final Item NULL_STEP_DEVICE = new Item(
+	public static final Item NULL_STEP_DEVICE = new NullStepDeviceItem(
 			new Item.Properties().setId(NSD_KEY).stacksTo(1).fireResistant());
 
 	@Override
