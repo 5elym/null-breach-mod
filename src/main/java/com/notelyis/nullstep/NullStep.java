@@ -30,6 +30,8 @@ public class NullStep implements ModInitializer {
 	public static final DataComponentType<SavedLocation> NSD_SAVED_LOCATION = DataComponentType.<SavedLocation>builder()
 			.persistent(SavedLocation.CODEC).build();
 
+	public static final NullStepEffect NULL_STEP_EFFECT = new NullStepEffect();
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -41,6 +43,7 @@ public class NullStep implements ModInitializer {
 		Registry.register(BuiltInRegistries.ITEM, id("null_step_device"), NULL_STEP_DEVICE);
 		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("null_step_device_saved_location"),
 				NSD_SAVED_LOCATION);
+		Registry.register(BuiltInRegistries.MOB_EFFECT, id("null_step_effect"), NULL_STEP_EFFECT);
 
 		LOGGER.info("Manufactured Null Step Device");
 
