@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +27,8 @@ public class NullStep implements ModInitializer {
 	public static final Item NULL_STEP_DEVICE = new NullStepDeviceItem(
 			new Item.Properties().setId(NSD_KEY).stacksTo(1).fireResistant());
 
-	public static final DataComponentType<BlockPos> NSD_POS = DataComponentType.<BlockPos>builder()
-			.persistent(BlockPos.CODEC).build();
+	public static final DataComponentType<SavedLocation> NSD_SAVED_LOCATION = DataComponentType.<SavedLocation>builder()
+			.persistent(SavedLocation.CODEC).build();
 
 	@Override
 	public void onInitialize() {
@@ -37,7 +39,8 @@ public class NullStep implements ModInitializer {
 		LOGGER.info("Initialising Null Step");
 
 		Registry.register(BuiltInRegistries.ITEM, id("null_step_device"), NULL_STEP_DEVICE);
-		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("null_step_device_pos"), NSD_POS);
+		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("null_step_device_saved_location"),
+				NSD_SAVED_LOCATION);
 
 		LOGGER.info("Manufactured Null Step Device");
 
