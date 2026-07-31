@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -40,13 +41,19 @@ public class NullStepDeviceItem extends Item {
                     look.y * NullStepEffect.getPushStrength(), look.z * NullStepEffect.getPullStrength());
             serverPlayer.hurtMarked = true;
 
-            // Allow free movement and noclip
-            serverPlayer.setGameMode(GameType.SPECTATOR);
-
             // Add a custom effect for 200 ticks (10 seconds)
             serverPlayer.addEffect(
                     new MobEffectInstance(
                             BuiltInRegistries.MOB_EFFECT.wrapAsHolder(NullStep.NULL_STEP_EFFECT),
+                            NullStepEffect.getEffectDuration(),
+                            0,
+                            false,
+                            false,
+                            false));
+
+            serverPlayer.addEffect(
+                    new MobEffectInstance(
+                            MobEffects.BLINDNESS,
                             NullStepEffect.getEffectDuration(),
                             0,
                             false,

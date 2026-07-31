@@ -2,6 +2,8 @@ package com.notelyis.nullstep;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -34,6 +36,15 @@ public class NullStepEffect extends MobEffect {
             if (effectInstance != null) {
                 int ticksLeft = effectInstance.getDuration();
 
+                if (ticksLeft == this.EFFECT_DURATION - 3) {
+                    // Allow free movement and noclip
+                    player.setGameMode(GameType.SPECTATOR);
+                }
+
+                if (ticksLeft <= this.EFFECT_DURATION - 1 && ticksLeft > 1) {
+                    player.setSprinting(false);
+                }
+
                 if (ticksLeft == 1) {
                     // Should be SURVIVAL, but using CREATIVE for testing
                     player.setGameMode(GameType.SURVIVAL);
@@ -42,6 +53,18 @@ public class NullStepEffect extends MobEffect {
                             player.getLookAngle().z * NullStepEffect.getPushStrength());
                     player.hurtMarked = true;
                     player.sendSystemMessage(Component.literal("Reality Restored!"));
+
+                    if (!serverWorld.noCollision(player)) {
+                        player.addEffect(
+                                new MobEffectInstance(
+                                        MobEffects.BLINDNESS,
+                                        100,
+                                        0,
+                                        false,
+                                        false,
+                                        false));
+                        player.hurt(serverWorld.damageSources().source(NullStep.NULL_DEATH), Float.MAX_VALUE);
+                    }
                 }
             }
         }
