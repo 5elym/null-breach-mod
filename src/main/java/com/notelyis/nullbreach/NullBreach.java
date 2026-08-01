@@ -1,4 +1,4 @@
-package com.notelyis.nullstep;
+package com.notelyis.nullbreach;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.BlockPos;
@@ -14,27 +14,28 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.notelyis.nullbreach.NullBreachEffect;
 
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NullStep implements ModInitializer {
-	public static final String MOD_ID = "null-step";
+public class NullBreach implements ModInitializer {
+	public static final String MOD_ID = "null-breach";
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static final ResourceKey<Item> NSD_KEY = ResourceKey.create(Registries.ITEM, id("null_step_device"));
-	public static final Item NULL_STEP_DEVICE = new NullStepDeviceItem(
-			new Item.Properties().setId(NSD_KEY).stacksTo(1).fireResistant());
+	public static final ResourceKey<Item> NBD_KEY = ResourceKey.create(Registries.ITEM, id("null_breach_device"));
+	public static final Item NULL_BREACH_DEVICE = new NullBreachDeviceItem(
+			new Item.Properties().setId(NBD_KEY).stacksTo(1).fireResistant());
 
-	public static final DataComponentType<SavedLocation> NSD_SAVED_LOCATION = DataComponentType.<SavedLocation>builder()
+	public static final DataComponentType<SavedLocation> NBD_SAVED_LOCATION = DataComponentType.<SavedLocation>builder()
 			.persistent(SavedLocation.CODEC).build();
 
-	public static final NullStepEffect NULL_STEP_EFFECT = new NullStepEffect();
+	public static final NullBreachEffect NULL_BREACH_EFFECT = new NullBreachEffect();
 
 	public static final ResourceKey<DamageType> NULL_DEATH = ResourceKey.create(Registries.DAMAGE_TYPE,
 			id("null_death"));
@@ -45,14 +46,14 @@ public class NullStep implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Initialising Null Step");
+		LOGGER.info("Initialising Null Breach");
 
-		Registry.register(BuiltInRegistries.ITEM, id("null_step_device"), NULL_STEP_DEVICE);
-		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("null_step_device_saved_location"),
-				NSD_SAVED_LOCATION);
-		Registry.register(BuiltInRegistries.MOB_EFFECT, id("null_step_effect"), NULL_STEP_EFFECT);
+		Registry.register(BuiltInRegistries.ITEM, id("null_breach_device"), NULL_BREACH_DEVICE);
+		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("nbd_saved_location"),
+				NBD_SAVED_LOCATION);
+		Registry.register(BuiltInRegistries.MOB_EFFECT, id("null_breach_effect"), NULL_BREACH_EFFECT);
 
-		LOGGER.info("Manufactured Null Step Device");
+		LOGGER.info("Manufactured Null Breach Device");
 
 	}
 

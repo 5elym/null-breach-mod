@@ -10,4 +10,4 @@ pluginManagement {
 }
 
 // Should match your modid
-rootProject.name = 'null-step'
+rootProject.name = 'null-breach'

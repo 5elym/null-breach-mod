@@ -1,4 +1,4 @@
-package com.notelyis.nullstep.mixin;
+package com.notelyis.nullbreach.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,38 +1,32 @@
 {
-	"schemaVersion": 1,
-	"id": "null-step",
-	"version": "${version}",
-	"name": "Null Step",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/null-step/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.notelyis.nullstep.NullStep"
-		],
-		"client": [
-			"com.notelyis.nullstep.client.NullStepClient"
-		]
-	},
-	"mixins": [
-		"null-step.mixins.json",
-		{
-			"config": "null-step.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.19.3",
-		"minecraft": "~26.2",
-		"java": ">=25",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "null-breach",
+  "version": "${version}",
+  "name": "Null Breach",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": ["Me!"],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/null-breach/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.notelyis.nullbreach.NullBreach"],
+    "client": ["com.notelyis.nullbreach.client.NullBreachClient"]
+  },
+  "mixins": [
+    "null-breach.mixins.json",
+    {
+      "config": "null-breach.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
 }

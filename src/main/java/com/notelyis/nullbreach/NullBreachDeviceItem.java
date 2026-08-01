@@ -1,4 +1,4 @@
-package com.notelyis.nullstep;
+package com.notelyis.nullbreach;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,18 +17,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
-public class NullStepDeviceItem extends Item {
+public class NullBreachDeviceItem extends Item {
 
     private boolean hasActivated = false;
 
-    public NullStepDeviceItem(Properties properties) {
+    public NullBreachDeviceItem(Properties properties) {
         super(properties);
     }
 
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide()) {
-            // player.sendSystemMessage(Component.literal("Null Step Device Activated"));
+            // player.sendSystemMessage(Component.literal("Null Breach Device Activated"));
             ItemStack itemStack = player.getItemInHand(hand);
 
             ServerLevel serverWorld = (ServerLevel) world;
@@ -37,15 +37,15 @@ public class NullStepDeviceItem extends Item {
             // Pulling player into the null
             Vec3 look = serverPlayer.getLookAngle();
 
-            serverPlayer.setDeltaMovement(look.x * NullStepEffect.getPullStrength(),
-                    look.y * NullStepEffect.getPushStrength(), look.z * NullStepEffect.getPullStrength());
+            serverPlayer.setDeltaMovement(look.x * NullBreachEffect.getPullStrength(),
+                    look.y * NullBreachEffect.getPushStrength(), look.z * NullBreachEffect.getPullStrength());
             serverPlayer.hurtMarked = true;
 
             // Add a custom effect for 200 ticks (10 seconds)
             serverPlayer.addEffect(
                     new MobEffectInstance(
-                            BuiltInRegistries.MOB_EFFECT.wrapAsHolder(NullStep.NULL_STEP_EFFECT),
-                            NullStepEffect.getEffectDuration(),
+                            BuiltInRegistries.MOB_EFFECT.wrapAsHolder(NullBreach.NULL_BREACH_EFFECT),
+                            NullBreachEffect.getEffectDuration(),
                             0,
                             false,
                             false,
@@ -54,7 +54,7 @@ public class NullStepDeviceItem extends Item {
             serverPlayer.addEffect(
                     new MobEffectInstance(
                             MobEffects.BLINDNESS,
-                            NullStepEffect.getEffectDuration(),
+                            NullBreachEffect.getEffectDuration(),
                             0,
                             false,
                             false,
@@ -62,8 +62,8 @@ public class NullStepDeviceItem extends Item {
 
             serverPlayer.sendSystemMessage(Component.literal("Sucked into the Null!"));
 
-            // if (itemStack.has(NullStep.NSD_SAVED_LOCATION)) {
-            // SavedLocation savedLocation = itemStack.get(NullStep.NSD_SAVED_LOCATION);
+            // if (itemStack.has(NullBreach.NBD_SAVED_LOCATION)) {
+            // SavedLocation savedLocation = itemStack.get(NullBreach.NBD_SAVED_LOCATION);
 
             // ServerLevel serverWorld = (ServerLevel) world;
             // ServerPlayer serverPlayer = (ServerPlayer) player;
@@ -79,10 +79,10 @@ public class NullStepDeviceItem extends Item {
             // serverPlayer.teleport(transition);
 
             // player.sendSystemMessage(Component.literal("Teleported to saved position!"));
-            // itemStack.remove(NullStep.NSD_SAVED_LOCATION);
+            // itemStack.remove(NullBreach.NBD_SAVED_LOCATION);
 
             // } else {
-            // itemStack.set(NullStep.NSD_SAVED_LOCATION,
+            // itemStack.set(NullBreach.NBD_SAVED_LOCATION,
             // new SavedLocation(player.position(), player.getYRot(), player.getXRot()));
             // player.sendSystemMessage(Component.literal("Location Locked: " +
             // player.position().toString()));

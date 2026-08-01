@@ -18,7 +18,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"null-step" {
+		"null-breach" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}

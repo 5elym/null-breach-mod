@@ -1,4 +1,4 @@
-package com.notelyis.nullstep;
+package com.notelyis.nullbreach;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -11,13 +11,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 
-public class NullStepEffect extends MobEffect {
+public class NullBreachEffect extends MobEffect {
 
     private static final int EFFECT_DURATION = 100; // Duration in ticks (5 seconds)
     private static final double PUSH_STRENGTH = 0.5; // Strength of the push when the effect ends
     private static final double PULL_STRENGTH = 2.5; // Strength of the pull when the effect starts
 
-    public NullStepEffect() {
+    public NullBreachEffect() {
         super(MobEffectCategory.NEUTRAL, 0x000000);
     }
 
@@ -48,9 +48,9 @@ public class NullStepEffect extends MobEffect {
                 if (ticksLeft == 1) {
                     // Should be SURVIVAL, but using CREATIVE for testing
                     player.setGameMode(GameType.SURVIVAL);
-                    player.setDeltaMovement(player.getLookAngle().x * NullStepEffect.getPushStrength(),
-                            NullStepEffect.getPushStrength(),
-                            player.getLookAngle().z * NullStepEffect.getPushStrength());
+                    player.setDeltaMovement(player.getLookAngle().x * NullBreachEffect.getPushStrength(),
+                            NullBreachEffect.getPushStrength(),
+                            player.getLookAngle().z * NullBreachEffect.getPushStrength());
                     player.hurtMarked = true;
                     player.sendSystemMessage(Component.literal("Reality Restored!"));
 
@@ -63,7 +63,7 @@ public class NullStepEffect extends MobEffect {
                                         false,
                                         false,
                                         false));
-                        player.hurt(serverWorld.damageSources().source(NullStep.NULL_DEATH), Float.MAX_VALUE);
+                        player.hurt(serverWorld.damageSources().source(NullBreach.NULL_DEATH), Float.MAX_VALUE);
                     }
                 }
             }
