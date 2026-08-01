@@ -5,8 +5,13 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.util.Random;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
@@ -36,6 +41,8 @@ public class NullBreachEffect extends MobEffect {
             if (effectInstance != null) {
                 int ticksLeft = effectInstance.getDuration();
 
+                this.applyBreachMessage(player, ticksLeft);
+
                 if (ticksLeft == this.EFFECT_DURATION - 3) {
                     // Allow free movement and noclip
                     player.setGameMode(GameType.SPECTATOR);
@@ -48,10 +55,7 @@ public class NullBreachEffect extends MobEffect {
                 if (ticksLeft == 1) {
                     // Should be SURVIVAL, but using CREATIVE for testing
                     player.setGameMode(GameType.SURVIVAL);
-                    player.setDeltaMovement(player.getLookAngle().x * NullBreachEffect.getPushStrength(),
-                            NullBreachEffect.getPushStrength(),
-                            player.getLookAngle().z * NullBreachEffect.getPushStrength());
-                    player.hurtMarked = true;
+                    this.applyPushEffect(player);
                     player.sendSystemMessage(Component.literal("Reality Restored!"));
 
                     if (!serverWorld.noCollision(player)) {
@@ -69,6 +73,36 @@ public class NullBreachEffect extends MobEffect {
             }
         }
         return true;
+    }
+
+    private void applyPushEffect(ServerPlayer player) {
+        player.setDeltaMovement(player.getLookAngle().x * NullBreachEffect.getPushStrength(),
+                NullBreachEffect.getPushStrength(),
+                player.getLookAngle().z * NullBreachEffect.getPushStrength());
+        player.hurtMarked = true;
+    }
+
+    private void applyBreachMessage(ServerPlayer player, int ticksLeft) {
+        double percentage = ((double) ticksLeft / this.EFFECT_DURATION) * 100;
+
+        String baseText = "Null Breach Stability: " + (int) percentage + "%";
+        MutableComponent finalMessage = Component.empty();
+
+        Random rand = new Random();
+        for (int i = 0; i < baseText.length(); i++) {
+
+            String currentLetter = String.valueOf(baseText.charAt(i));
+            MutableComponent letterComponent = Component.literal(currentLetter).withStyle(ChatFormatting.RED);
+
+            if (rand.nextInt(90) > percentage) {
+                letterComponent.withStyle(ChatFormatting.OBFUSCATED);
+            }
+
+            finalMessage.append(letterComponent);
+        }
+
+        // Display message above inventory bar
+        player.sendSystemMessage(finalMessage, true);
     }
 
     public static int getEffectDuration() {

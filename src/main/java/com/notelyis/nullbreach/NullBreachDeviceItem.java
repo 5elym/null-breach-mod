@@ -51,14 +51,14 @@ public class NullBreachDeviceItem extends Item {
                             false,
                             false));
 
-            serverPlayer.addEffect(
-                    new MobEffectInstance(
-                            MobEffects.BLINDNESS,
-                            NullBreachEffect.getEffectDuration(),
-                            0,
-                            false,
-                            false,
-                            false));
+            // serverPlayer.addEffect(
+            // new MobEffectInstance(
+            // MobEffects.BLINDNESS,
+            // NullBreachEffect.getEffectDuration(),
+            // 0,
+            // false,
+            // false,
+            // false));
 
             serverPlayer.sendSystemMessage(Component.literal("Sucked into the Null!"));
 
