@@ -39,7 +39,7 @@ public class NullBreachDeviceItem extends Item {
 
             serverPlayer.setDeltaMovement(look.x * NullBreachEffect.getPullStrength(),
                     look.y * NullBreachEffect.getPushStrength(), look.z * NullBreachEffect.getPullStrength());
-            serverPlayer.hurtMarked = true;
+            serverPlayer.syncVelocity = true;
 
             // Add a custom effect for 200 ticks (10 seconds)
             serverPlayer.addEffect(
@@ -59,8 +59,6 @@ public class NullBreachDeviceItem extends Item {
             // false,
             // false,
             // false));
-
-            serverPlayer.sendSystemMessage(Component.literal("Sucked into the Null!"));
 
             // if (itemStack.has(NullBreach.NBD_SAVED_LOCATION)) {
             // SavedLocation savedLocation = itemStack.get(NullBreach.NBD_SAVED_LOCATION);

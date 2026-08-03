@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
@@ -21,6 +22,7 @@ public class NullBreachEffect extends MobEffect {
     private static final int EFFECT_DURATION = 100; // Duration in ticks (5 seconds)
     private static final double PUSH_STRENGTH = 0.5; // Strength of the push when the effect ends
     private static final double PULL_STRENGTH = 2.5; // Strength of the pull when the effect starts
+    private static final String FILTER_NAME = "null-breach:null_breach"; // Name of the shader filter to apply
 
     public NullBreachEffect() {
         super(MobEffectCategory.NEUTRAL, 0x000000);
@@ -46,6 +48,7 @@ public class NullBreachEffect extends MobEffect {
                 if (ticksLeft == this.EFFECT_DURATION - 3) {
                     // Allow free movement and noclip
                     player.setGameMode(GameType.SPECTATOR);
+                    this.applyNullShader(serverWorld, player, true);
                 }
 
                 if (ticksLeft <= this.EFFECT_DURATION - 1 && ticksLeft > 1) {
@@ -56,7 +59,6 @@ public class NullBreachEffect extends MobEffect {
                     // Should be SURVIVAL, but using CREATIVE for testing
                     player.setGameMode(GameType.SURVIVAL);
                     this.applyPushEffect(player);
-                    player.sendSystemMessage(Component.literal("Reality Restored!"));
 
                     if (!serverWorld.noCollision(player)) {
                         player.addEffect(
@@ -69,6 +71,8 @@ public class NullBreachEffect extends MobEffect {
                                         false));
                         player.hurt(serverWorld.damageSources().source(NullBreach.NULL_DEATH), Float.MAX_VALUE);
                     }
+
+                    this.applyNullShader(serverWorld, player, false);
                 }
             }
         }
@@ -79,7 +83,7 @@ public class NullBreachEffect extends MobEffect {
         player.setDeltaMovement(player.getLookAngle().x * NullBreachEffect.getPushStrength(),
                 NullBreachEffect.getPushStrength(),
                 player.getLookAngle().z * NullBreachEffect.getPushStrength());
-        player.hurtMarked = true;
+        player.syncVelocity = true;
     }
 
     private void applyBreachMessage(ServerPlayer player, int ticksLeft) {
@@ -103,6 +107,19 @@ public class NullBreachEffect extends MobEffect {
 
         // Display message above inventory bar
         player.sendSystemMessage(finalMessage, true);
+    }
+
+    private void applyNullShader(ServerLevel world, LivingEntity entity, boolean apply) {
+        if (!entity.level().isClientSide() && entity instanceof ServerPlayer player) {
+            MinecraftServer server = world.getServer();
+
+            if (server != null) {
+                server.getCommands().performPrefixedCommand(
+                        server.createCommandSourceStack().withSuppressedOutput(),
+                        String.format("posteffect %s " + player.getScoreboardName() + " " + this.FILTER_NAME,
+                                apply ? "add" : "remove"));
+            }
+        }
     }
 
     public static int getEffectDuration() {
