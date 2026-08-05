@@ -1,10 +1,13 @@
 package com.notelyis.nullbreach;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,74 +22,87 @@ import net.minecraft.world.phys.Vec3;
 
 public class NullBreachDeviceItem extends Item {
 
-    private boolean hasActivated = false;
+        private boolean hasActivated = false;
 
-    public NullBreachDeviceItem(Properties properties) {
-        super(properties);
-    }
-
-    @Override
-    public InteractionResult use(Level world, Player player, InteractionHand hand) {
-        if (!world.isClientSide()) {
-            // player.sendSystemMessage(Component.literal("Null Breach Device Activated"));
-            ItemStack itemStack = player.getItemInHand(hand);
-
-            ServerLevel serverWorld = (ServerLevel) world;
-            ServerPlayer serverPlayer = (ServerPlayer) player;
-
-            // Pulling player into the null
-            Vec3 look = serverPlayer.getLookAngle();
-
-            serverPlayer.setDeltaMovement(look.x * NullBreachEffect.getPullStrength(),
-                    look.y * NullBreachEffect.getPushStrength(), look.z * NullBreachEffect.getPullStrength());
-            serverPlayer.syncVelocity = true;
-
-            // Add a custom effect for 200 ticks (10 seconds)
-            serverPlayer.addEffect(
-                    new MobEffectInstance(
-                            BuiltInRegistries.MOB_EFFECT.wrapAsHolder(NullBreach.NULL_BREACH_EFFECT),
-                            NullBreachEffect.getEffectDuration(),
-                            0,
-                            false,
-                            false,
-                            false));
-
-            // serverPlayer.addEffect(
-            // new MobEffectInstance(
-            // MobEffects.BLINDNESS,
-            // NullBreachEffect.getEffectDuration(),
-            // 0,
-            // false,
-            // false,
-            // false));
-
-            // if (itemStack.has(NullBreach.NBD_SAVED_LOCATION)) {
-            // SavedLocation savedLocation = itemStack.get(NullBreach.NBD_SAVED_LOCATION);
-
-            // ServerLevel serverWorld = (ServerLevel) world;
-            // ServerPlayer serverPlayer = (ServerPlayer) player;
-
-            // TeleportTransition transition = new TeleportTransition(
-            // serverWorld,
-            // savedLocation.pos(),
-            // Vec3.ZERO, // Momentum
-            // savedLocation.yaw(),
-            // savedLocation.pitch(),
-            // TeleportTransition.PLACE_PORTAL_TICKET);
-
-            // serverPlayer.teleport(transition);
-
-            // player.sendSystemMessage(Component.literal("Teleported to saved position!"));
-            // itemStack.remove(NullBreach.NBD_SAVED_LOCATION);
-
-            // } else {
-            // itemStack.set(NullBreach.NBD_SAVED_LOCATION,
-            // new SavedLocation(player.position(), player.getYRot(), player.getXRot()));
-            // player.sendSystemMessage(Component.literal("Location Locked: " +
-            // player.position().toString()));
-            // }
+        public NullBreachDeviceItem(Properties properties) {
+                super(properties);
         }
-        return InteractionResult.SUCCESS;
-    }
+
+        @Override
+        public InteractionResult use(Level world, Player player, InteractionHand hand) {
+                if (!world.isClientSide()) {
+                        // player.sendSystemMessage(Component.literal("Null Breach Device Activated"));
+                        ItemStack itemStack = player.getItemInHand(hand);
+
+                        ServerLevel serverWorld = (ServerLevel) world;
+                        ServerPlayer serverPlayer = (ServerPlayer) player;
+
+                        // Pulling player into the null
+                        Vec3 eyePosition = serverPlayer.getEyePosition();
+                        Vec3 look = serverPlayer.getLookAngle();
+
+                        this.createSpaceRip(eyePosition, look, serverWorld);
+
+                        serverPlayer.setDeltaMovement(look.x * NullBreachEffect.getPullStrength(),
+                                        look.y * NullBreachEffect.getPushStrength(),
+                                        look.z * NullBreachEffect.getPullStrength());
+                        serverPlayer.syncVelocity = true;
+
+                        // Add a custom effect for 200 ticks (10 seconds)
+                        serverPlayer.addEffect(
+                                        new MobEffectInstance(
+                                                        BuiltInRegistries.MOB_EFFECT
+                                                                        .wrapAsHolder(NullBreach.NULL_BREACH_EFFECT),
+                                                        NullBreachEffect.getEffectDuration(),
+                                                        0,
+                                                        false,
+                                                        false,
+                                                        false));
+
+                        // serverPlayer.addEffect(
+                        // new MobEffectInstance(
+                        // MobEffects.BLINDNESS,
+                        // NullBreachEffect.getEffectDuration(),
+                        // 0,
+                        // false,
+                        // false,
+                        // false));
+
+                        // if (itemStack.has(NullBreach.NBD_SAVED_LOCATION)) {
+                        // SavedLocation savedLocation = itemStack.get(NullBreach.NBD_SAVED_LOCATION);
+
+                        // ServerLevel serverWorld = (ServerLevel) world;
+                        // ServerPlayer serverPlayer = (ServerPlayer) player;
+
+                        // TeleportTransition transition = new TeleportTransition(
+                        // serverWorld,
+                        // savedLocation.pos(),
+                        // Vec3.ZERO, // Momentum
+                        // savedLocation.yaw(),
+                        // savedLocation.pitch(),
+                        // TeleportTransition.PLACE_PORTAL_TICKET);
+
+                        // serverPlayer.teleport(transition);
+
+                        // player.sendSystemMessage(Component.literal("Teleported to saved position!"));
+                        // itemStack.remove(NullBreach.NBD_SAVED_LOCATION);
+
+                        // } else {
+                        // itemStack.set(NullBreach.NBD_SAVED_LOCATION,
+                        // new SavedLocation(player.position(), player.getYRot(), player.getXRot()));
+                        // player.sendSystemMessage(Component.literal("Location Locked: " +
+                        // player.position().toString()));
+                        // }
+                }
+                return InteractionResult.SUCCESS;
+        }
+
+        private void createSpaceRip(Vec3 eyePosition, Vec3 lookAngle, ServerLevel serverWorld) {
+                // Calculate the position 2 blocks in front of the player
+                Vec3 spawnPosition = eyePosition.add(lookAngle.scale(3.0));
+
+                NullBreachParticles.spawnBreachParticles(serverWorld, spawnPosition);
+                NullBreachSounds.playBreachSound(serverWorld, spawnPosition);
+        }
 
 }

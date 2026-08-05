@@ -1,10 +1,12 @@
 package com.notelyis.nullbreach;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
@@ -39,6 +41,9 @@ public class NullBreach implements ModInitializer {
 
 	public static final ResourceKey<DamageType> NULL_DEATH = ResourceKey.create(Registries.DAMAGE_TYPE,
 			id("null_death"));
+
+	public static final SimpleParticleType SPACE_RIP = Registry.register(BuiltInRegistries.PARTICLE_TYPE,
+			id("space_rip"), FabricParticleTypes.simple());
 
 	@Override
 	public void onInitialize() {
