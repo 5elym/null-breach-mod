@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["#.#", "ENE", "#.#"],
+  "key": {
+    "#": "minecraft:amethyst_shard",
+    ".": "minecraft:redstone_block",
+    "E": "minecraft:ender_eye",
+    "N": "minecraft:nether_star"
+  },
+  "result": {
+    "id": "null-breach:null_breach_device",
+    "count": 1
+  }
+}
