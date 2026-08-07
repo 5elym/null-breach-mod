@@ -1,0 +1,6 @@
+{
+  "item.null-breach.null_breach_device": "Null Breach Device",
+  "creativeTab.null-breach.null_breach_tab": "Null Breach",
+  "death.attack.null_death": "%1$s was consumed by the Null",
+  "death.attack.null_death.player": "%1$s was consumed by the Null due to %2$s"
+}

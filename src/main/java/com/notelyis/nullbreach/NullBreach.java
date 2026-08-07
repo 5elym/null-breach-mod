@@ -11,9 +11,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.notelyis.nullbreach.NullBreachEffect;
@@ -45,6 +50,17 @@ public class NullBreach implements ModInitializer {
 	public static final SimpleParticleType SPACE_RIP = Registry.register(BuiltInRegistries.PARTICLE_TYPE,
 			id("space_rip"), FabricParticleTypes.simple());
 
+	public static final ResourceKey<CreativeModeTab> NULL_BREACH_TAB_KEY = ResourceKey
+			.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), id("null_breach_tab"));
+
+	public static final CreativeModeTab NULL_BREACH_TAB = FabricCreativeModeTab.builder()
+			.icon(() -> new ItemStack(NULL_BREACH_DEVICE))
+			.title(Component.translatable("creativeTab.null-breach.null_breach_tab"))
+			.displayItems((params, output) -> {
+				output.accept(NULL_BREACH_DEVICE); // Add future items here!
+			})
+			.build();
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -57,6 +73,7 @@ public class NullBreach implements ModInitializer {
 		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("nbd_saved_location"),
 				NBD_SAVED_LOCATION);
 		Registry.register(BuiltInRegistries.MOB_EFFECT, id("null_breach_effect"), NULL_BREACH_EFFECT);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, NULL_BREACH_TAB_KEY, NULL_BREACH_TAB);
 
 		LOGGER.info("Manufactured Null Breach Device");
 
