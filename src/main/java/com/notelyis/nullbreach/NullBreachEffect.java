@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Random;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class NullBreachEffect extends MobEffect {
@@ -50,7 +52,7 @@ public class NullBreachEffect extends MobEffect {
                 this.applyBreachMessage(player, ticksLeft);
                 NullBreachSounds.playWhileBreachingSound(serverWorld, player);
 
-                if (ticksLeft == this.EFFECT_DURATION - 3) {
+                if (ticksLeft == this.EFFECT_DURATION - 1) {
                     // Allow free movement and noclip
                     player.setGameMode(GameType.SPECTATOR);
                     this.applyNullShader(serverWorld, player, true);
@@ -60,7 +62,7 @@ public class NullBreachEffect extends MobEffect {
                     player.setSprinting(false);
                 }
 
-                if (ticksLeft <= 40) {
+                if (ticksLeft <= 20) {
                     // Stuttering effect: Triggers every 5 ticks as it gets closer to zero
                     if (ticksLeft % 5 == 0) {
                         NullBreachParticles.spawnStutterParticles(serverWorld, player.getEyePosition());
@@ -73,7 +75,11 @@ public class NullBreachEffect extends MobEffect {
                     player.setGameMode(GameType.SURVIVAL);
                     this.applyPushEffect(player);
 
-                    if (!serverWorld.noCollision(player)) {
+                    Vec3 eyePos = player.getEyePosition();
+                    BlockPos eyeBlockPos = BlockPos.containing(eyePos);
+                    BlockState blockState = serverWorld.getBlockState(eyeBlockPos);
+
+                    if (blockState.isSuffocating(serverWorld, eyeBlockPos)) {
                         player.addEffect(
                                 new MobEffectInstance(
                                         MobEffects.BLINDNESS,
@@ -87,8 +93,6 @@ public class NullBreachEffect extends MobEffect {
 
                     this.applyNullShader(serverWorld, player, false);
 
-                    // Vec3 spawnPosition =
-                    // player.getEyePosition().add(player.getLookAngle().scale(3.0));
                     NullBreachParticles.spawnBreachParticles(serverWorld, player.getEyePosition());
                     NullBreachSounds.playBreachSound(serverWorld, player.getEyePosition());
                 }
